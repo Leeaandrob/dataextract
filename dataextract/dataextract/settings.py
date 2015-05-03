@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from __future__ import absolute_import
 import os
 import djcelery
 djcelery.setup_loader()
@@ -79,9 +80,11 @@ WSGI_APPLICATION = 'dataextract.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql'
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'dataextract',
-        'USER': 'root',
+        'USER': 'leandrobarbosa',
+        'PASSWORD': 'simbiose',
+        'HOST': 'localhost',
     }
 }
 
@@ -109,7 +112,9 @@ BROKER_URL = "amqp://simbiosevetures:qwert741258@locahost:5672/simbioseveturesho
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'America_Sao_Paulo'
+CELERY_TIMEZONE = 'America/Sao_Paulo'
+CELERY_RESULT_BACKEND= 'djcelery.backends.database:DatabaseBackend'
+CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 
 
 STATIC_URL = '/static/'
