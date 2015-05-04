@@ -1,3 +1,5 @@
+#coding: utf-8
+from __future__ import absolute_import
 """
 Django settings for dataextract project.
 
@@ -11,13 +13,11 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-from __future__ import absolute_import
 import os
 import djcelery
 djcelery.setup_loader()
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -40,7 +40,11 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'djcelery'
+    # third app
+    'djcelery',
+    # our app
+    'dataextract',
+    'crawler',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -89,6 +93,31 @@ DATABASES = {
 }
 
 
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
+    'handlers': {
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler'
+        }
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    }
+}
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
@@ -108,13 +137,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 # Celery Settings
-BROKER_URL = "amqp://simbiosevetures:qwert741258@locahost:5672/simbiosevetureshost"
+BROKER_URL = "amqp://simbiosevetures:qwert741258@127.0.0.1:5672/simbiosevetureshost"
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'America/Sao_Paulo'
-CELERY_RESULT_BACKEND= 'djcelery.backends.database:DatabaseBackend'
-CELERYBEAT_SCHEDULER = 'djcelery.schedulers.DatabaseScheduler'
 
+SITE_ID = 1
 
 STATIC_URL = '/static/'
